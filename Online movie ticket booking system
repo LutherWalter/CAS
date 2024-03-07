@@ -1,0 +1,98 @@
+import java.util.HashMap;
+import java.util.Map;
+
+// Movie class representing a movie
+class Movie {
+    private String title;
+    private String director;
+    private int durationMinutes;
+
+    public Movie(String title, String director, int durationMinutes) {
+        this.title = title;
+        this.director = director;
+        this.durationMinutes = durationMinutes;
+    }
+
+    // Getters and setters
+}
+
+// Theater class representing a theater with available seats
+class Theater {
+    private String name;
+    private int totalSeats;
+    private int availableSeats;
+
+    public Theater(String name, int totalSeats) {
+        this.name = name;
+        this.totalSeats = totalSeats;
+        this.availableSeats = totalSeats;
+    }
+
+    public boolean bookSeats(int numSeats) {
+        if (numSeats <= availableSeats) {
+            availableSeats -= numSeats;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // Getters and setters
+}
+
+// User class representing a user of the system
+class User {
+    private String username;
+    private String password;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    // Getters and setters
+}
+
+// BookingService class responsible for managing movie bookings
+class BookingService {
+    private Map<Movie, Theater> movieTheaterMap;
+    private Map<User, Map<Movie, Integer>> userBookings;
+
+    public BookingService() {
+        movieTheaterMap = new HashMap<>();
+        userBookings = new HashMap<>();
+    }
+
+    public boolean bookMovie(User user, Movie movie, int numSeats) {
+        if (movieTheaterMap.containsKey(movie)) {
+            Theater theater = movieTheaterMap.get(movie);
+            if (theater.bookSeats(numSeats)) {
+                userBookings.computeIfAbsent(user, k -> new HashMap<>()).put(movie, numSeats);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Additional methods for adding movies, theaters, users, etc.
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Initialize booking service, movies, theaters, and users
+        BookingService bookingService = new BookingService();
+        Movie movie1 = new Movie("Inception", "Christopher Nolan", 148);
+        Theater theater1 = new Theater("Cinema 1", 100);
+        User user1 = new User("alice", "password");
+
+        // Add movie and theater mapping to booking service
+        bookingService.movieTheaterMap.put(movie1, theater1);
+
+        // Book movie tickets
+        if (bookingService.bookMovie(user1, movie1, 2)) {
+            System.out.println("Booking successful!");
+        } else {
+            System.out.println("Booking failed!");
+        }
+    }
+}
