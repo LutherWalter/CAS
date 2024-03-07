@@ -1,0 +1,89 @@
+import java.util.HashMap;
+import java.util.Map;
+
+// Product class representing a product
+class Product {
+    private String name;
+    private double price;
+
+    public Product(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    // Getters and setters
+}
+
+// ShoppingCart class representing a user's shopping cart
+class ShoppingCart {
+    private Map<Product, Integer> items;
+
+    public ShoppingCart() {
+        items = new HashMap<>();
+    }
+
+    public void addItem(Product product, int quantity) {
+        items.put(product, items.getOrDefault(product, 0) + quantity);
+    }
+
+    public void removeItem(Product product, int quantity) {
+        int currentQuantity = items.getOrDefault(product, 0);
+        if (currentQuantity - quantity <= 0) {
+            items.remove(product);
+        } else {
+            items.put(product, currentQuantity - quantity);
+        }
+    }
+
+    // Getters and setters
+}
+
+// Order class representing an order placed by a user
+class Order {
+    private int orderId;
+    private Map<Product, Integer> items;
+
+    public Order(int orderId, Map<Product, Integer> items) {
+        this.orderId = orderId;
+        this.items = items;
+    }
+
+    // Getters and setters
+}
+
+// PaymentService class responsible for processing payments
+class PaymentService {
+    public boolean processPayment(Order order, double amount) {
+        // Simulate payment processing
+        return true;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Initialize products, shopping cart, order, and payment service
+        Product product1 = new Product("iPhone", 999.99);
+        Product product2 = new Product("Laptop", 1499.99);
+        ShoppingCart cart = new ShoppingCart();
+        cart.addItem(product1, 1);
+        cart.addItem(product2, 2);
+        Order order = new Order(123456, cart.getItems());
+        PaymentService paymentService = new PaymentService();
+
+        // Process payment for the order
+        double totalPrice = calculateTotalPrice(cart.getItems());
+        if (paymentService.processPayment(order, totalPrice)) {
+            System.out.println("Payment successful! Order ID: " + order.getOrderId());
+        } else {
+            System.out.println("Payment failed! Please try again.");
+        }
+    }
+
+    private static double calculateTotalPrice(Map<Product, Integer> items) {
+        double totalPrice = 0;
+        for (Map.Entry<Product, Integer> entry : items.entrySet()) {
+            totalPrice += entry.getKey().getPrice() * entry.getValue();
+        }
+        return totalPrice;
+    }
+}
